@@ -1,0 +1,4 @@
+tags:
+  live:
+    # Pruebas contra la API real: `flutter test --tags live`.
+    skip: "Requiere Internet; se corren a mano con --tags live --run-skipped"
