@@ -47,6 +47,7 @@ dependencies:
   crypto: ^3.0.7
   flutter_localizations:
     sdk: flutter
+  audioplayers: ^6.8.1
 
 dev_dependencies:
   flutter_test:
@@ -63,10 +64,27 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+  assets:
+    - assets/icons/
+    - assets/battle/
   fonts:
-    - family: Bricolage
+    - family: Poppins
       fonts:
-        - asset: assets/fonts/BricolageGrotesque.ttf
-    - family: Figtree
+        - asset: assets/fonts/Poppins-Regular.ttf
+        - asset: assets/fonts/Poppins-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 700
+    - family: Tiny5
       fonts:
-        - asset: assets/fonts/Figtree.ttf
+        - asset: assets/fonts/Tiny5-Regular.ttf
+    - family: RobotoMono
+      fonts:
+        - asset: assets/fonts/RobotoMono-Regular.ttf
+    # Subconjunto: solo kana, signos japoneses y ASCII (nombres japoneses).
+    - family: NotoSansJP
+      fonts:
+        - asset: assets/fonts/NotoSansJP-Black.ttf
+          weight: 900
