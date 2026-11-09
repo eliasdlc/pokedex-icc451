@@ -1,4 +1,742 @@
 {
   "@@locale": "es",
-  "appTitle": "Pokédex"
-}
+  "appTitle": "Pokédex",
+  "navPokedex": "Pokédex",
+  "navFavorites": "Favoritos",
+  "navPlay": "Jugar",
+  "navSettings": "Ajustes",
+  "statusOnline": "En línea",
+  "statusOffline": "Sin conexión",
+  "statusUnavailable": "API caída",
+  "statusSyncing": "Sincronizando",
+  "statusOnlineLong": "Conectado. Los datos se actualizan desde PokéAPI y se guardan en el dispositivo.",
+  "statusOfflineLong": "Sin conexión. Ves los datos guardados en el dispositivo.",
+  "statusUnavailableLong": "Hay red, pero PokéAPI no responde. Ves los datos guardados en el dispositivo.",
+  "statusSyncingLong": "Descargando cambios en segundo plano. Puedes seguir usando la app.",
+  "originLive": "Origen: PokéAPI, guardado en el dispositivo",
+  "originLocal": "Origen: solo datos del dispositivo",
+  "lastSync": "Última sincronización: {when}",
+  "@lastSync": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "neverSynced": "Aún no se ha sincronizado",
+  "localCatalog": "{local} de {total} Pokémon en el dispositivo",
+  "@localCatalog": {
+    "placeholders": {
+      "local": {
+        "type": "int"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "pendingRepairs": "{count, plural, =1{1 registro alterado espera corrección} other{{count} registros alterados esperan corrección}}",
+  "@pendingRepairs": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "retryNow": "Reintentar ahora",
+  "close": "Cerrar",
+  "indicatorSemantics": "Estado de conexión: {status}. Toca para ver detalles.",
+  "@indicatorSemantics": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "justNow": "hace un momento",
+  "minutesAgo": "hace {n} min",
+  "@minutesAgo": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursAgo": "hace {n} h",
+  "@hoursAgo": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "daysAgo": "hace {n} d",
+  "@daysAgo": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "searchHint": "Buscar por nombre o número",
+  "clearFilters": "Limpiar",
+  "generationLabel": "Generación",
+  "abilityLabel": "Habilidad",
+  "anyOption": "Cualquiera",
+  "favoritesOnly": "Solo favoritos",
+  "sortAttack": "Ataque",
+  "sortDefense": "Defensa",
+  "sortSpeed": "Velocidad",
+  "ascending": "Ascendente",
+  "descending": "Descendente",
+  "apply": "Aplicar",
+  "resultsCount": "{count, plural, =0{Ningún resultado} =1{1 Pokémon} other{{count} Pokémon}}",
+  "@resultsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "partialCatalog": "Catálogo parcial: {local} de {total}. Sin conexión solo se busca en lo descargado.",
+  "@partialCatalog": {
+    "placeholders": {
+      "local": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "emptyFirstLoadTitle": "Preparando tu Pokédex",
+  "emptyFirstLoadBody": "Descargando el catálogo. Los primeros Pokémon aparecen en segundos.",
+  "emptyResultsTitle": "Ningún Pokémon coincide",
+  "emptyResultsBody": "Prueba otro nombre o quita algún filtro.",
+  "errorTitle": "Algo salió mal",
+  "errorBody": "Los datos guardados siguen a salvo. Intenta de nuevo.",
+  "imageUnavailable": "Imagen no disponible sin conexión",
+  "detailStats": "Estadísticas base",
+  "detailAbilities": "Habilidades",
+  "detailMoves": "Movimientos",
+  "height": "Altura",
+  "weight": "Peso",
+  "eggGroups": "Grupo huevo",
+  "captureRate": "Captura",
+  "total": "Total",
+  "weaknesses": "Débil contra",
+  "resistances": "Resiste",
+  "immunities": "Inmune a",
+  "noEvolution": "No evoluciona",
+  "legendary": "Legendario",
+  "mythical": "Singular",
+  "detailNotDownloaded": "El detalle de este Pokémon todavía no se descargó. Conéctate para verlo completo.",
+  "tamperedBanner": "Los datos locales de este Pokémon no coinciden con lo sincronizado. Se corregirán desde PokéAPI.",
+  "addFavorite": "Agregar a favoritos",
+  "removeFavorite": "Quitar de favoritos",
+  "shiny": "Variocolor",
+  "share": "Compartir tarjeta",
+  "favoriteAdded": "Agregado a favoritos",
+  "favoriteRemoved": "Quitado de favoritos",
+  "stat_hp": "PS",
+  "stat_attack": "Ataque",
+  "stat_defense": "Defensa",
+  "stat_specialAttack": "At. esp.",
+  "stat_specialDefense": "Def. esp.",
+  "stat_speed": "Velocidad",
+  "evoLevel": "Nivel {level}",
+  "@evoLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "evoItem": "Con {item}",
+  "@evoItem": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "evoTrade": "Intercambio",
+  "evoFriendship": "Amistad",
+  "evoTime": "De {time}",
+  "@evoTime": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "evoOther": "Condición especial",
+  "timeDay": "día",
+  "timeNight": "noche",
+    "favoritesTitle": "Favoritos",
+    "playTitle": "Jugar",
+    "battleTitle": "Batalla Pokémon",
+    "regionsTitle": "Regiones",
+    "achievementsTitle": "Logros",
+    "start": "Empezar",
+    "playAgain": "Jugar otra vez",
+    "triviaQuestion": "Pregunta {n} de {total}",
+    "@triviaQuestion": {
+      "placeholders": {
+        "n": {
+          "type": "int"
+        },
+        "total": {
+          "type": "int"
+        }
+      }
+    },
+    "triviaCorrect": "¡Correcto! Es {name}.",
+    "@triviaCorrect": {
+      "placeholders": {
+        "name": {
+          "type": "String"
+        }
+      }
+    },
+    "triviaWrong": "Era {name}.",
+    "@triviaWrong": {
+      "placeholders": {
+        "name": {
+          "type": "String"
+        }
+      }
+    },
+    "triviaTimeout": "Se acabó el tiempo. Era {name}.",
+    "@triviaTimeout": {
+      "placeholders": {
+        "name": {
+          "type": "String"
+        }
+      }
+    },
+    "triviaFinished": "Ronda terminada",
+    "triviaResult": "{correct} de {total} aciertos",
+    "@triviaResult": {
+      "placeholders": {
+        "correct": {
+          "type": "int"
+        },
+        "total": {
+          "type": "int"
+        }
+      }
+    },
+    "newAchievement": "Logro desbloqueado: {name}",
+    "@newAchievement": {
+      "placeholders": {
+        "name": {
+          "type": "String"
+        }
+      }
+    },
+    "ach_firstCorrect": "Primer acierto",
+    "ach_streak5": "Racha de 5",
+    "ach_perfectRound": "Ronda perfecta",
+    "ach_score1000": "1000 puntos",
+    "ach_firstBattleWin": "Primera victoria",
+    "ach_fiveBattleWins": "Cinco victorias",
+    "ach_collector10": "Coleccionista (10 favoritos)",
+    "ach_typeMaster": "Maestro de tipos (súper eficaz x4)",
+    "battleChoose": "Elige tu Pokémon",
+    "battleChooseHint": "Solo aparecen Pokémon con detalle descargado.",
+    "battleNeedDetails": "Abre la ficha de al menos 2 Pokémon con conexión para poder combatir sin ella.",
+    "battleYourTurn": "¿Qué hará {name}?",
+    "@battleYourTurn": {
+      "placeholders": {
+        "name": {
+          "type": "String"
+        }
+      }
+    },
+    "battleUsed": "{attacker} usó {move}.",
+    "@battleUsed": {
+      "placeholders": {
+        "attacker": {
+          "type": "String"
+        },
+        "move": {
+          "type": "String"
+        }
+      }
+    },
+    "battleMissed": "¡Falló!",
+    "battleSuper": "¡Es súper eficaz!",
+    "battleNotVery": "No es muy eficaz…",
+    "battleNoEffect": "No tiene efecto.",
+    "battleCritical": "¡Golpe crítico!",
+    "battleWon": "¡Ganaste!",
+    "battleLost": "Perdiste",
+    "battleStats": "{won} victorias en {played} batallas",
+    "@battleStats": {
+      "placeholders": {
+        "won": {
+          "type": "int"
+        },
+        "played": {
+          "type": "int"
+        }
+      }
+    },
+    "settingsTitle": "Ajustes",
+    "themeLabel": "Tema",
+    "themeLight": "Claro",
+    "themeDark": "Oscuro",
+    "languageLabel": "Idioma",
+    "languageSystem": "Sistema",
+    "labTitle": "Laboratorio",
+    "labSubtitle": "Herramientas para la defensa técnica",
+    "labSimulateApi": "Simular caída de la API",
+    "labSimulateApiHint": "Las consultas fallan como un 503 aunque haya red (prueba PA-08).",
+    "labSyncNow": "Sincronizar ahora",
+    "labIntegrity": "Verificar integridad ahora",
+    "labIntegrityResult": "{count, plural, =0{Sin alteraciones} =1{1 registro alterado} other{{count} registros alterados}}",
+    "@labIntegrityResult": {
+      "placeholders": {
+        "count": {
+          "type": "int"
+        }
+      }
+    },
+    "labSql": "Consola SQL",
+    "labSqlHint": "UPDATE pokemon SET name_es = 'Pikachu modificado' WHERE id = 25",
+    "labRun": "Ejecutar",
+    "labSqlDone": "Ejecutado. Filas: {rows}",
+    "@labSqlDone": {
+      "placeholders": {
+        "rows": {
+          "type": "int"
+        }
+      }
+    },
+    "labMeta": "Metadatos de sincronización",
+    "onbTitle2": "Mira el indicador",
+    "onbBody2": "Arriba a la derecha verás si estás en línea, sin conexión, con la API caída o sincronizando. Tócalo para más detalles.",
+    "next": "Siguiente",
+    "getStarted": "Empezar",
+    "battleDamage": "Quitó {damage} PS.",
+    "@battleDamage": {
+      "placeholders": {
+        "damage": {
+          "type": "int"
+        }
+      }
+    },
+    "detailForms": "Formas",
+    "formDefault": "Normal",
+    "movesVersion": "Versión del juego",
+    "methodLevelUp": "Nivel",
+    "methodMachine": "MT",
+    "methodTutor": "Tutor",
+    "methodEgg": "Huevo",
+    "sortByLevel": "Por nivel",
+    "sortByName": "Por nombre",
+    "movesEmpty": "No aprende movimientos por este método en esta versión.",
+    "moveLevel": "Nv {level}",
+    "@moveLevel": {
+      "placeholders": {
+        "level": {
+          "type": "int"
+        }
+      }
+    },
+    "regionLabel": "Región",
+    "regionOpen": "Ver los Pokémon de {region} en el catálogo",
+    "@regionOpen": {
+      "placeholders": {
+        "region": {
+          "type": "String"
+        }
+      }
+    },
+    "moveOnEvolution": "Evo",
+      "baseNavProfile": "Perfil",
+      "baseContinue": "Continuar",
+      "navegacionTypePickTitle": "Selecciona el tipo",
+      "navegacionAllTypes": "Todos los tipos",
+      "navegacionTypesCount": "{count} tipos",
+      "@navegacionTypesCount": {
+        "placeholders": {
+          "count": {
+            "type": "int"
+          }
+        }
+      },
+      "navegacionApplyFilter": "Aplicar filtro",
+      "navegacionSortTitle": "Ordenar por",
+      "navegacionSortNumberAsc": "Menor número",
+      "navegacionSortNumberDesc": "Mayor número",
+      "navegacionSortNameAsc": "A-Z",
+      "navegacionSortNameDesc": "Z-A",
+      "navegacionStatsSection": "Estadísticas base",
+      "navegacionPartialNote": "Catálogo parcial: hay {local} de {total} guardados. El resto aparece al terminar la sincronización.",
+      "@navegacionPartialNote": {
+        "placeholders": {
+          "local": {
+            "type": "int"
+          },
+          "total": {
+            "type": "int"
+          }
+        }
+      },
+      "navegacionSavedNote": "Tu orden y tus filtros se guardan para la próxima vez.",
+      "navegacionSeeResults": "{count, plural, =0{Sin resultados} =1{Ver 1 Pokémon} other{Ver {count} Pokémon}}",
+      "@navegacionSeeResults": {
+        "placeholders": {
+          "count": {
+            "type": "int"
+          }
+        }
+      },
+      "navegacionApiDownTitle": "PokéAPI no está respondiendo",
+      "navegacionApiDownBody": "Ves lo que ya está guardado. Vuelvo a intentarlo solo; si quieres, hazlo ahora.",
+      "navegacionEmptyDbTitle": "Tu Pokédex todavía está vacía",
+      "navegacionEmptyDbBody": "Necesito Internet una sola vez para descargarla. Después todo funciona sin conexión.",
+      "navegacionRetry": "Reintentar",
+      "navegacionCheckConnection": "Revisar mi conexión",
+      "navegacionFavEmptyTitle": "Todavía no guardas ningún Pokémon",
+      "navegacionFavEmptyBody": "Toca el corazón de cualquier Pokémon y aparecerá aquí, aunque no tengas Internet.",
+      "navegacionGoToPokedex": "Ir a la Pokédex",
+      "navegacionRemove": "Quitar",
+      "navegacionRemovedFavorite": "Quitaste a {name} de favoritos",
+      "@navegacionRemovedFavorite": {
+        "placeholders": {
+          "name": {
+            "type": "String"
+          }
+        }
+      },
+      "navegacionUndo": "Deshacer",
+      "navegacionOnb1Title": "Todos los Pokémon en un solo lugar",
+      "navegacionOnb1Body": "Los 1025 Pokémon de las nueve generaciones, guardados en tu teléfono para verlos cuando quieras.",
+      "navegacionOnb3Title": "¿Listo para la aventura?",
+      "navegacionOnb3Body": "Todo lo que veas queda guardado: catálogo, favoritos y trivia funcionan aunque no tengas conexión.",
+      "navegacionSkip": "Saltar",
+      "navegacionOnbPage": "Página {page} de {total}",
+      "@navegacionOnbPage": {
+        "placeholders": {
+          "page": {
+            "type": "int"
+          },
+          "total": {
+            "type": "int"
+          }
+        }
+      },
+      "detailTabAbout": "Sobre",
+      "detailTabStats": "Estadísticas",
+      "detailTabEvolutions": "Evoluciones",
+      "detailTabMoves": "Movimientos",
+      "detailCryReplay": "Escuchar el grito",
+      "detailCryUnavailable": "Grito no disponible",
+      "detailArtPixel": "Pixel",
+      "detailArtIllustration": "Ilustración",
+      "detailArt3d": "3D",
+      "detailArtFallback": "No hay {requested} para este Pokémon: se muestra {shown}.",
+      "@detailArtFallback": {
+        "placeholders": {
+          "requested": {
+            "type": "String"
+          },
+          "shown": {
+            "type": "String"
+          }
+        }
+      },
+      "detailHiddenAbility": "(oculta)",
+      "detailSizeTitle": "Tamaño",
+      "detailSizeYou": "Tú, {height} m",
+      "@detailSizeYou": {
+        "placeholders": {
+          "height": {
+            "type": "String"
+          }
+        }
+      },
+      "detailSizePokemon": "{name}, {height} m y {weight} kg",
+      "@detailSizePokemon": {
+        "placeholders": {
+          "name": {
+            "type": "String"
+          },
+          "height": {
+            "type": "String"
+          },
+          "weight": {
+            "type": "String"
+          }
+        }
+      },
+      "detailWhereLives": "Ver dónde vive: {region}",
+      "@detailWhereLives": {
+        "placeholders": {
+          "region": {
+            "type": "String"
+          }
+        }
+      },
+      "detailWhereLivesHint": "Lleva a la Pokédex filtrada por {region}.",
+      "@detailWhereLivesHint": {
+        "placeholders": {
+          "region": {
+            "type": "String"
+          }
+        }
+      },
+      "detailFormsHint": "Cada forma cambia el sprite, los tipos y los movimientos.",
+      "detailFormsNone": "{name} no tiene otras formas.",
+      "@detailFormsNone": {
+        "placeholders": {
+          "name": {
+            "type": "String"
+          }
+        }
+      },
+      "detailShareTitle": "Tu carta",
+      "detailShareAsImage": "Compartir como imagen",
+      "detailShareSave": "Guardar imagen",
+      "detailShareFailed": "No se pudo preparar la imagen de la carta.",
+      "detailCardHp": "PS",
+      "detailCardStageBasic": "BÁSICO",
+      "detailCardStage1": "FASE 1",
+      "detailCardStage2": "FASE 2",
+      "detailCardWeakness": "debilidad",
+      "detailCardResistance": "resistencia",
+      "detailCardRetreat": "retirada",
+      "detailCardArtCredit": "Ilus. arte oficial, vía PokéAPI",
+      "detailCardNoAttacks": "Sin movimientos descargados",
+      "detailCardClassPhysical": "Físico",
+      "detailCardClassSpecial": "Especial",
+      "detailCardClassStatus": "Estado",
+      "detailCardAccuracy": "precisión {percent} %",
+      "@detailCardAccuracy": {
+        "placeholders": {
+          "percent": {
+            "type": "int"
+          }
+        }
+      },
+      "detailWeaknesses": "Debilidades",
+      "detailResistances": "Resistencias",
+      "detailImmunities": "Inmunidades",
+      "detailEvolutions": "Evoluciones",
+        "gamesHubProgressTitle": "Tu Pokédex",
+        "gamesHubProgressValue": "{saved} de {total} guardados",
+        "@gamesHubProgressValue": {
+          "placeholders": {
+            "saved": {
+              "type": "int"
+            },
+            "total": {
+              "type": "int"
+            }
+          }
+        },
+        "gamesTriviaCardBody": "Adivina la silueta del Pokémon.",
+        "gamesBattleCardTitle": "Batalla",
+        "gamesBattleCardBody": "1 contra 1 contra la CPU.",
+        "gamesEnter": "Entrar",
+        "gamesBack": "Volver",
+        "gamesTriviaPrompt": "¿Quién es ese Pokémon?",
+        "gamesTriviaTime": "Tiempo restante: {seconds} s",
+        "@gamesTriviaTime": {
+          "placeholders": {
+            "seconds": {
+              "type": "int"
+            }
+          }
+        },
+        "gamesTriviaPoints": "{score} pts",
+        "@gamesTriviaPoints": {
+          "placeholders": {
+            "score": {
+              "type": "int"
+            }
+          }
+        },
+        "gamesTriviaOfflineNote": "La partida se guarda en el teléfono aunque no tengas Internet.",
+        "gamesTriviaNewAchievements": "Logros nuevos",
+        "gamesTriviaRankingTitle": "Ranking en este teléfono",
+        "gamesTriviaFinalScore": "{score} puntos",
+        "@gamesTriviaFinalScore": {
+          "placeholders": {
+            "score": {
+              "type": "int"
+            }
+          }
+        },
+        "gamesNoDataTitle": "Faltan Pokémon para jugar",
+        "gamesNoDataBody": "Necesito al menos {needed} guardados y tienes {have}. Conéctate un momento para descargar más; después la trivia funciona sin Internet.",
+        "@gamesNoDataBody": {
+          "placeholders": {
+            "needed": {
+              "type": "int"
+            },
+            "have": {
+              "type": "int"
+            }
+          }
+        },
+        "gamesNoDataEs": "Faltan Pokémon guardados para jugar la trivia: se necesitan al menos {needed} y hay {have}. Conéctate para descargar más.",
+        "@gamesNoDataEs": {
+          "placeholders": {
+            "needed": {
+              "type": "int"
+            },
+            "have": {
+              "type": "int"
+            }
+          }
+        },
+        "gamesNoDataEn": "Not enough saved Pokémon to play trivia: at least {needed} are needed and there are {have}. Connect to download more.",
+        "@gamesNoDataEn": {
+          "placeholders": {
+            "needed": {
+              "type": "int"
+            },
+            "have": {
+              "type": "int"
+            }
+          }
+        },
+        "gamesRetryDownload": "Reintentar la descarga",
+        "gamesViewPokedex": "Ver mi Pokédex",
+        "gamesBattleSummary": "CPU, 1 contra 1",
+        "gamesBattleLevel": "Nv. {level}",
+        "@gamesBattleLevel": {
+          "placeholders": {
+            "level": {
+              "type": "int"
+            }
+          }
+        },
+        "gamesBattleHp": "PS {hp} / {max}",
+        "@gamesBattleHp": {
+          "placeholders": {
+            "hp": {
+              "type": "int"
+            },
+            "max": {
+              "type": "int"
+            }
+          }
+        },
+        "gamesBattleHpSemantics": "{name}: {percent} % de PS",
+        "@gamesBattleHpSemantics": {
+          "placeholders": {
+            "name": {
+              "type": "String"
+            },
+            "percent": {
+              "type": "int"
+            }
+          }
+        },
+        "gamesBattlePower": "Poder {power}",
+        "@gamesBattlePower": {
+          "placeholders": {
+            "power": {
+              "type": "int"
+            }
+          }
+        },
+        "gamesBattleMoveSemantics": "{name}, tipo {type}, poder {power}",
+        "@gamesBattleMoveSemantics": {
+          "placeholders": {
+            "name": {
+              "type": "String"
+            },
+            "type": {
+              "type": "String"
+            },
+            "power": {
+              "type": "int"
+            }
+          }
+        },
+        "gamesTriviaCardTitle": "Trivia",
+        "perfilTrainerDefaultName": "Entrenador",
+        "perfilCardTitle": "FICHA DE ENTRENADOR",
+        "perfilCardName": "NOMBRE",
+        "perfilCardPokedex": "POKéDEX",
+        "perfilCardTrivia": "TRIVIA",
+        "perfilCardWins": "VICTORIAS",
+        "perfilCardAchievements": "LOGROS",
+        "perfilCardMedals": "MEDALLAS",
+        "perfilCardSemantics": "Ficha de entrenador de {name}: {saved} Pokémon guardados, {earned} de {total} medallas",
+        "@perfilCardSemantics": {
+          "placeholders": {
+            "name": {
+              "type": "String"
+            },
+            "saved": {
+              "type": "int"
+            },
+            "earned": {
+              "type": "int"
+            },
+            "total": {
+              "type": "int"
+            }
+          }
+        },
+        "perfilAchDone": "Conseguido",
+        "perfilAchPending": "Pendiente",
+        "perfilAchDesc_firstCorrect": "Adivina tu primera silueta en la trivia",
+        "perfilAchDesc_streak5": "5 respuestas seguidas en la trivia",
+        "perfilAchDesc_perfectRound": "Una ronda de trivia sin ningún fallo",
+        "perfilAchDesc_score1000": "Suma 1000 puntos en una ronda de trivia",
+        "perfilAchDesc_firstBattleWin": "Gana tu primera batalla",
+        "perfilAchDesc_fiveBattleWins": "Gana cinco batallas",
+        "perfilAchDesc_collector10": "Marca 10 Pokémon como favoritos",
+        "perfilAchDesc_typeMaster": "Usa un movimiento súper eficaz x4 en una batalla",
+        "perfilRegionGeneration": "{n}.ª generación",
+        "@perfilRegionGeneration": {
+          "placeholders": {
+            "n": {
+              "type": "int"
+            }
+          }
+        },
+        "perfilRegionProgress": "{saved} de {size} guardados",
+        "@perfilRegionProgress": {
+          "placeholders": {
+            "saved": {
+              "type": "int"
+            },
+            "size": {
+              "type": "int"
+            }
+          }
+        },
+        "perfilRegionEmptyTitle": "Aún no hay Pokémon de esta región",
+        "perfilRegionEmptyBody": "Conéctate una vez para descargarlos. Después se ven sin conexión.",
+        "perfilThemeAuto": "Automático",
+        "perfilArtMode": "Arte de los Pokémon",
+        "perfilArtByGeneration": "Por generación",
+        "perfilArtByGenerationHint": "Pixel en la 1 a la 5, 3D en la 6 a la 9",
+        "perfilArtPixel": "Pixel",
+        "perfilArtIllustration": "Ilustración",
+        "perfilArt3d": "3D",
+        "perfilSectionPokedex": "Pokédex",
+        "perfilSectionAppearance": "Apariencia",
+        "perfilSectionData": "Datos",
+        "perfilReduceMotion": "Reducir movimiento",
+        "perfilReduceMotionHint": "Sin la caída del sprite ni movimientos de adorno",
+        "perfilCryOnOpen": "Grito al abrir el detalle",
+        "perfilCryOnOpenHint": "Suena una vez al abrir la ficha",
+        "perfilAppLanguage": "Idioma de la aplicación",
+        "perfilSyncNow": "Sincronizar",
+        "perfilLabNoEvents": "Sin eventos todavía. Lo que hagas aquí se anota en esta consola.",
+        "perfilLabCount": "Contar filas",
+        "perfilLabTamper": "Alterar dato",
+        "perfilLabApiDown": "caída simulada",
+        "perfilLabApiUp": "servicio normal",
+        "perfilLastSync": "Última sincronización"
+      }
