@@ -143,7 +143,7 @@ abstract class AppLocalizations {
   /// No description provided for @statusUnavailable.
   ///
   /// In es, this message translates to:
-  /// **'API caída'**
+  /// **'Servicio no disponible'**
   String get statusUnavailable;
 
   /// No description provided for @statusSyncing.
@@ -1891,6 +1891,36 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Última sincronización'**
   String get perfilLastSync;
+
+  /// No description provided for @headerSaved.
+  ///
+  /// In es, this message translates to:
+  /// **'{saved} de {total}'**
+  String headerSaved(int saved, String total);
+
+  /// No description provided for @favoritesCount.
+  ///
+  /// In es, this message translates to:
+  /// **'{count, plural, =1{1 guardado} other{{count} guardados}}'**
+  String favoritesCount(int count);
+
+  /// No description provided for @gamesBattleImmune.
+  ///
+  /// In es, this message translates to:
+  /// **'No afecta'**
+  String get gamesBattleImmune;
+
+  /// No description provided for @gamesBattlePp.
+  ///
+  /// In es, this message translates to:
+  /// **'PP {left}/{max}'**
+  String gamesBattlePp(int left, int max);
+
+  /// No description provided for @gamesBattleMoveImmuneSemantics.
+  ///
+  /// In es, this message translates to:
+  /// **'{name}, tipo {type}, no afecta al rival'**
+  String gamesBattleMoveImmuneSemantics(String name, String type);
 }
 
 class _AppLocalizationsDelegate

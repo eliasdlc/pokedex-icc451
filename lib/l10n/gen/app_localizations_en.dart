@@ -31,7 +31,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statusOffline => 'Offline';
 
   @override
-  String get statusUnavailable => 'API down';
+  String get statusUnavailable => 'Service unavailable';
 
   @override
   String get statusSyncing => 'Syncing';
@@ -1063,4 +1063,33 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get perfilLastSync => 'Last sync';
+
+  @override
+  String headerSaved(int saved, String total) {
+    return '$saved of $total';
+  }
+
+  @override
+  String favoritesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count saved',
+      one: '1 saved',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get gamesBattleImmune => 'No effect';
+
+  @override
+  String gamesBattlePp(int left, int max) {
+    return 'PP $left/$max';
+  }
+
+  @override
+  String gamesBattleMoveImmuneSemantics(String name, String type) {
+    return '$name, $type type, no effect on the rival';
+  }
 }
