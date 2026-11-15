@@ -15,12 +15,21 @@ class ArtSelection {
 }
 
 class ArtSources {
-  const ArtSources({required this.pokemonId, required this.generationId})
-    : assert(pokemonId > 0);
+  const ArtSources({
+    required this.pokemonId,
+    required this.generationId,
+    this.staticSprite,
+  }) : assert(pokemonId > 0);
 
   final int pokemonId;
   final int generationId;
 
+  /// El sprite fijo de PokéAPI (`front_default`), el mismo que dibuja el
+  /// catálogo. Es el Pixel de quien no tiene sprite animado: sin él, el
+  /// catálogo mostraría un sprite que la ficha dice que no existe.
+  final Uri? staticSprite;
+
+  /// Último Pokémon con sprite animado (Black/White).
   static const lastPixelId = 649;
 
   static const lastPixelGeneration = 5;
@@ -32,18 +41,23 @@ class ArtSources {
   static const _cries =
       'https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest';
 
+  bool get _animatedPixel => pokemonId <= lastPixelId;
+
   bool has(ArtMode mode) => switch (mode) {
-    ArtMode.pixel => pokemonId <= lastPixelId,
+    ArtMode.pixel => _animatedPixel || staticSprite != null,
     ArtMode.illustration || ArtMode.model3d => true,
   };
 
   Uri? urlFor(ArtMode mode) {
     if (!has(mode)) return null;
-    return Uri.parse(switch (mode) {
-      ArtMode.pixel => '$_animated/$pokemonId.gif',
-      ArtMode.illustration => '$_sprites/other/official-artwork/$pokemonId.png',
-      ArtMode.model3d => '$_sprites/other/home/$pokemonId.png',
-    });
+    return switch (mode) {
+      ArtMode.pixel =>
+        _animatedPixel ? Uri.parse('$_animated/$pokemonId.gif') : staticSprite,
+      ArtMode.illustration => Uri.parse(
+        '$_sprites/other/official-artwork/$pokemonId.png',
+      ),
+      ArtMode.model3d => Uri.parse('$_sprites/other/home/$pokemonId.png'),
+    };
   }
 
   ArtMode get defaultMode =>

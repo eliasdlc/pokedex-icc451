@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_tokens.dart';
+import '../../../../shared/widgets/pokedex_key.dart';
 
 class EmptyStateView extends StatelessWidget {
   const EmptyStateView({
@@ -60,25 +61,20 @@ class EmptyStateView extends StatelessWidget {
               const SizedBox(height: Gaps.section),
               SizedBox(
                 width: double.infinity,
-                child: FilledButton(
-                  onPressed: onPrimary,
-                  child: Text(primaryLabel!),
-                ),
+                child: PokedexKey(label: primaryLabel!, onPressed: onPrimary),
               ),
             ],
             if (secondaryLabel != null) ...[
+              // Sola, la acción de contorno lleva la separación de sección.
               SizedBox(
                 height: primaryLabel == null ? Gaps.section : Gaps.sibling,
               ),
               SizedBox(
                 width: double.infinity,
-                child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: t.acTexto,
-                    side: BorderSide(color: t.ac, width: 1.5),
-                  ),
+                child: PokedexKey(
+                  label: secondaryLabel!,
+                  kind: PokedexKeyKind.outline,
                   onPressed: onSecondary,
-                  child: Text(secondaryLabel!),
                 ),
               ),
             ],

@@ -15,6 +15,27 @@ void main() {
       expect(art(650, 6).urlFor(ArtMode.pixel), isNull);
     });
 
+    test('pasado el 649 el pixel es el sprite fijo, si existe', () {
+      final sprite = Uri.parse('$base/906.png');
+      final sprigatito = ArtSources(
+        pokemonId: 906,
+        generationId: 9,
+        staticSprite: sprite,
+      );
+      expect(sprigatito.has(ArtMode.pixel), isTrue);
+      expect(sprigatito.urlFor(ArtMode.pixel), sprite);
+      // Hasta el 649 manda el animado aunque haya sprite fijo.
+      final pikachu = ArtSources(
+        pokemonId: 25,
+        generationId: 1,
+        staticSprite: Uri.parse('$base/25.png'),
+      );
+      expect(
+        pikachu.urlFor(ArtMode.pixel).toString(),
+        '$base/versions/generation-v/black-white/animated/25.gif',
+      );
+    });
+
     test('ilustración y 3D existen del 1 al 1025', () {
       for (final id in [1, 649, 650, 1025]) {
         expect(art(id, 1).has(ArtMode.illustration), isTrue);

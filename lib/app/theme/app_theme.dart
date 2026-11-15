@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 
 import 'app_tokens.dart';
+import 'shell_tokens.dart';
 
+// Tiny5 y Roboto Mono no están aquí: son estilos con nombre (`gameText`,
+// `monoText`) porque solo se usan en objetos de juego y en la consola.
 TextTheme _textTheme(AppTokens t) {
   TextStyle poppins(double size, FontWeight weight, Color color) => TextStyle(
     fontFamily: 'Poppins',
     fontSize: size,
     fontWeight: weight,
+    // Poppins ya trae un interlineado propio amplio.
     height: 1.4,
     color: color,
   );
@@ -26,7 +30,8 @@ TextTheme _textTheme(AppTokens t) {
 }
 
 ThemeData buildTheme(Brightness brightness) {
-  final t = brightness == Brightness.dark ? AppTokens.dark : AppTokens.light;
+  final dark = brightness == Brightness.dark;
+  final t = dark ? AppTokens.dark : AppTokens.light;
   final scheme = ColorScheme.fromSeed(seedColor: t.ac, brightness: brightness)
       .copyWith(
         primary: t.ac,
@@ -46,7 +51,7 @@ ThemeData buildTheme(Brightness brightness) {
     scaffoldBackgroundColor: t.bg,
     fontFamily: 'Poppins',
     textTheme: text,
-    extensions: [t],
+    extensions: [t, if (dark) ShellTokens.dark else ShellTokens.light],
     splashFactory: NoSplash.splashFactory,
     highlightColor: Colors.transparent,
     appBarTheme: AppBarTheme(
