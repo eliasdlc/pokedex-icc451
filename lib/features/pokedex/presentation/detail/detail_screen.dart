@@ -90,8 +90,11 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
     );
   }
 
-  ArtSources _sources(PokemonSummary s) =>
-      ArtSources(pokemonId: s.id, generationId: s.generationId);
+  ArtSources _sources(PokemonSummary s) => ArtSources(
+    pokemonId: s.id,
+    generationId: s.generationId,
+    staticSprite: s.spriteUrl == null ? null : Uri.tryParse(s.spriteUrl!),
+  );
 
   ({Uri url, MediaKind kind}) _cryRequest(PokemonSummary s) =>
       (url: _sources(s).cry, kind: MediaKind.cries);

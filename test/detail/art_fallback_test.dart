@@ -13,7 +13,21 @@ void main() {
     expect(art.shown, ArtMode.model3d);
   });
 
-  test('pedir Pixel pasado el Nº 649 cae a Ilustración y lo avisa', () {
+  test('pasado el Nº 649, Pixel es el mismo sprite fijo del catálogo', () {
+    final sprite = Uri.parse(
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/700.png',
+    );
+    final art = ArtSources(
+      pokemonId: 700,
+      generationId: 6,
+      staticSprite: sprite,
+    ).select(ArtMode.pixel);
+    expect(art.shown, ArtMode.pixel);
+    expect(art.usedFallback, isFalse);
+    expect(art.url, sprite);
+  });
+
+  test('sin ningún sprite, pedir Pixel pasado el Nº 649 cae a Ilustración y lo avisa', () {
     final art = const ArtSources(
       pokemonId: 700,
       generationId: 6,

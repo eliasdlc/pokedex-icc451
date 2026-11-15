@@ -27,6 +27,21 @@ class PokemonArt extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // El sprite fijo ya lo guardó la sincronización del catálogo: se dibuja
+    // ese archivo, que existe también sin red, en vez de bajarlo otra vez.
+    final s = summary;
+    final savedSprite = s?.spriteFile;
+    if (s != null && savedSprite != null && s.spriteUrl == url.toString()) {
+      return SizedBox.square(
+        dimension: size,
+        child: _Picture(
+          file: File(savedSprite),
+          size: size,
+          pixelArt: pixelArt,
+          label: s.nameEn,
+        ),
+      );
+    }
     final file = ref.watch(mediaFileProvider((url: url, kind: MediaKind.art)));
     return SizedBox.square(
       dimension: size,
