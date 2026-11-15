@@ -172,11 +172,9 @@ class _Lights extends ConsumerWidget {
         ),
       );
     }
-    final line2 = status == IndicatorStatus.online
-        ? detail ?? label
-        : detail == null
-        ? label
-        : '$label, $detail';
+    // El estado va siempre primero, también en línea (IND-05: texto e icono);
+    // el dato de la pantalla lo sigue tras una coma.
+    final line2 = detail == null ? label : '$label, $detail';
     return Expanded(
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -187,7 +185,12 @@ class _Lights extends ConsumerWidget {
             // El hueco que deja el escalón de la placa.
             const SizedBox(width: 42),
             Expanded(
-              child: _Lcd(title: title!, line2: line2, detail: detail),
+              child: _Lcd(
+                title: title!,
+                line2: line2,
+                icon: connectionIcon(status),
+                detail: detail,
+              ),
             ),
           ],
         ),
@@ -247,10 +250,16 @@ class _Leds extends StatelessWidget {
 }
 
 class _Lcd extends StatelessWidget {
-  const _Lcd({required this.title, required this.line2, required this.detail});
+  const _Lcd({
+    required this.title,
+    required this.line2,
+    required this.icon,
+    required this.detail,
+  });
 
   final String title;
   final String line2;
+  final IconData icon;
   final String? detail;
 
   @override
@@ -293,11 +302,19 @@ class _Lcd extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: style(20, 18, shell.lcdTinta),
                   ),
-                  Text(
-                    line2,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: style(13, 12, shell.lcdTinta2),
+                  Row(
+                    children: [
+                      Icon(icon, size: 11, color: shell.lcdTinta2),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          line2,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: style(13, 12, shell.lcdTinta2),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

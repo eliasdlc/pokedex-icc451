@@ -18,6 +18,15 @@ String connectionLabel(AppLocalizations l10n, IndicatorStatus status) =>
       IndicatorStatus.syncing => l10n.statusSyncing,
     };
 
+/// El icono del estado: el mismo en la pantalla LCD y en la hoja, para que el
+/// estado nunca dependa solo del color de las luces (IND-05).
+IconData connectionIcon(IndicatorStatus status) => switch (status) {
+  IndicatorStatus.online => Icons.wifi_rounded,
+  IndicatorStatus.offline => Icons.wifi_off_rounded,
+  IndicatorStatus.serviceUnavailable => Icons.warning_amber_rounded,
+  IndicatorStatus.syncing => Icons.sync_rounded,
+};
+
 /// Se abre desde las luces de la cabecera. Usa el Navigator raíz para quedar
 /// por encima de la barra de navegación.
 void showConnectionSheet(BuildContext context) => showModalBottomSheet<void>(
@@ -34,14 +43,12 @@ class _ConnectionSheet extends ConsumerWidget {
     final sync = ref.watch(syncStateProvider).value ?? const SyncState();
     final l10n = context.l10n;
     final t = context.tokens;
-    final (color, icon) = switch (view.status) {
-      IndicatorStatus.online => (t.success, Icons.wifi_rounded),
-      IndicatorStatus.offline => (t.mute, Icons.wifi_off_rounded),
-      IndicatorStatus.serviceUnavailable => (
-        t.warning,
-        Icons.warning_amber_rounded,
-      ),
-      IndicatorStatus.syncing => (t.info, Icons.sync_rounded),
+    final icon = connectionIcon(view.status);
+    final color = switch (view.status) {
+      IndicatorStatus.online => t.success,
+      IndicatorStatus.offline => t.mute,
+      IndicatorStatus.serviceUnavailable => t.warning,
+      IndicatorStatus.syncing => t.info,
     };
     final long = switch (view.status) {
       IndicatorStatus.online => l10n.statusOnlineLong,
