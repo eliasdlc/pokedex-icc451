@@ -210,37 +210,55 @@ class MoveRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.tokens;
     final l10n = context.l10n;
+    // Nivel 0 en PokéAPI = lo aprende al evolucionar.
+    final level = Text(switch ((move.method, move.level)) {
+      (MoveLearnMethod.levelUp, 0) => l10n.moveOnEvolution,
+      (MoveLearnMethod.levelUp, final level) => l10n.moveLevel(level),
+      _ => '',
+    }, style: context.text.labelMedium);
+    final name = Text(move.displayName, style: context.text.labelLarge);
+    final power = Text(
+      move.power?.toString() ?? '-',
+      textAlign: TextAlign.right,
+      style: context.text.labelLarge?.copyWith(color: t.body),
+    );
+    // Con el texto del sistema agrandado (RNF-ACC-04) las cuatro columnas no
+    // caben: el nombre va en su propia línea y debajo nivel, tipo y poder.
+    // En una fila partía "Flamethrower" en sílabas y "Nv 100" en "12 / 0".
+    // Hasta 130 % sigue en fila, con las columnas fijas creciendo con el texto.
+    final scaler = MediaQuery.textScalerOf(context);
+    final stacked = scaler.scale(10) > 13;
     return Container(
       constraints: const BoxConstraints(minHeight: 44),
       padding: const EdgeInsets.symmetric(vertical: 9),
       decoration: BoxDecoration(
         border: first ? null : Border(top: BorderSide(color: t.ln)),
       ),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 52,
-            // Nivel 0 en PokéAPI = lo aprende al evolucionar.
-            child: Text(switch ((move.method, move.level)) {
-              (MoveLearnMethod.levelUp, 0) => l10n.moveOnEvolution,
-              (MoveLearnMethod.levelUp, final level) => l10n.moveLevel(level),
-              _ => '',
-            }, style: context.text.labelMedium),
-          ),
-          Expanded(
-            child: Text(move.displayName, style: context.text.labelLarge),
-          ),
-          if (type != null) TypeChip(type!, compact: true),
-          SizedBox(
-            width: 40,
-            child: Text(
-              move.power?.toString() ?? '-',
-              textAlign: TextAlign.right,
-              style: context.text.labelLarge?.copyWith(color: t.body),
+      child: stacked
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                name,
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    level,
+                    const SizedBox(width: Gaps.row),
+                    if (type != null) TypeChip(type!, compact: true),
+                    const Spacer(),
+                    power,
+                  ],
+                ),
+              ],
+            )
+          : Row(
+              children: [
+                SizedBox(width: scaler.scale(52), child: level),
+                Expanded(child: name),
+                if (type != null) TypeChip(type!, compact: true),
+                SizedBox(width: scaler.scale(40), child: power),
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 }

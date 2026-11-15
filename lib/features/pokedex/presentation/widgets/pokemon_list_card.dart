@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_tokens.dart';
@@ -34,7 +36,40 @@ class PokemonListCard extends StatelessWidget {
   static const extent = height + gap;
 
   static const _panelTop = 16.0;
-  static const _panelHeight = height - _panelTop;
+
+  /// Alto de la tarjeta con el texto del sistema actual: [height] a 100 %, y
+  /// más cuando el texto crece (RNF-ACC-04), medido con las mismas fuentes
+  /// que dibuja la tarjeta. Reserva una línea de nombre y dos filas de tipos.
+  static double heightOf(BuildContext context) {
+    if (!_scaled(context)) return height;
+    final scaler = MediaQuery.textScalerOf(context);
+    final text = context.text;
+    double line(TextStyle? style) {
+      final painter = TextPainter(
+        text: TextSpan(text: 'Ág', style: style),
+        textScaler: scaler,
+        textDirection: TextDirection.ltr,
+      )..layout();
+      final h = painter.height;
+      painter.dispose();
+      return h;
+    }
+
+    final chip = math.max(20.0, line(_typeLabelStyle)) + 6;
+    final content =
+        _contentTop +
+        line(_numberStyle(text)) +
+        _numberToName +
+        line(_nameStyle(text)) +
+        _nameToTypes +
+        2 * chip +
+        6 +
+        _contentBottom;
+    return math.max(height, _panelTop + content);
+  }
+
+  /// Lo que ocupa en una lista de alto fijo: tarjeta más aire.
+  static double extentOf(BuildContext context) => heightOf(context) + gap;
 
   static const _spriteMax = 160.0;
 
@@ -59,13 +94,15 @@ class PokemonListCard extends StatelessWidget {
           )
         : _artworkSize;
 
+    final cardHeight = heightOf(context);
+
     return Semantics(
       button: true,
       label: '$name ${pokemon.nationalNumber}',
       excludeSemantics: true,
       onTap: onTap,
       child: SizedBox(
-        height: height,
+        height: cardHeight,
         child: Stack(
           clipBehavior: Clip.none,
           children: [
@@ -73,7 +110,7 @@ class PokemonListCard extends StatelessWidget {
               top: _panelTop,
               left: 0,
               right: 0,
-              height: _panelHeight,
+              height: cardHeight - _panelTop,
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   color: hue,
@@ -130,6 +167,29 @@ class PokemonListCard extends StatelessWidget {
   }
 }
 
+// Medidas y estilos que comparten el dibujo y PokemonListCard.heightOf: a
+// 100 % suman las posiciones del Figma (número en 12, nombre en 30, tipos en 68).
+const _contentTop = 12.0;
+const _contentBottom = 10.0;
+const _numberToName = 1.2;
+const _nameToTypes = 12.0;
+const _typeLabelStyle = TextStyle(
+  fontFamily: 'Poppins',
+  fontWeight: FontWeight.w500,
+  fontSize: 12,
+);
+
+TextStyle? _numberStyle(TextTheme text) => text.labelMedium?.copyWith(
+  fontWeight: FontWeight.w600,
+  letterSpacing: 0.48,
+);
+
+TextStyle? _nameStyle(TextTheme text) =>
+    text.titleLarge?.copyWith(letterSpacing: -0.2, height: 1.3);
+
+bool _scaled(BuildContext context) =>
+    MediaQuery.textScalerOf(context).scale(10) > 10;
+
 class _PanelContent extends StatelessWidget {
   const _PanelContent({
     required this.pokemon,
@@ -181,50 +241,60 @@ class _PanelContent extends StatelessWidget {
             ),
           ),
         ),
+        // Número, nombre y tipos en columna: a 100 % caen en las mismas
+        // posiciones del Figma (12, 30 y 68); con el texto del sistema más
+        // grande empujan hacia abajo y la tarjeta crece (PokemonListCard.heightOf).
         Positioned(
           left: 20,
-          top: 12,
-          child: Row(
-            children: [
-              Text(
-                'Nº $number',
-                style: text.labelMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.48,
-                  color: ink.withValues(alpha: 0.85),
-                ),
-              ),
-              if (pokemon.isFavorite) ...[
-                const SizedBox(width: 12),
-                Icon(Icons.favorite_rounded, size: 14, color: ink),
-              ],
-            ],
-          ),
-        ),
-        Positioned(
-          left: 20,
-          top: 30,
-          width: 192,
-          child: Text(
-            name,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: text.titleLarge?.copyWith(
-              color: ink,
-              letterSpacing: -0.2,
-              height: 1.3,
-            ),
-          ),
-        ),
-        Positioned(
-          left: 20,
-          top: 68,
+          top: _contentTop,
           width: 200,
-          child: Wrap(
-            spacing: 6,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              for (final type in pokemon.types)
-                TypeChip(type, compact: true, style: TypeChipStyle.glass),
+              Row(
+                children: [
+                  Text(
+                    'Nº $number',
+                    style: _numberStyle(text)
+                        ?.copyWith(color: ink.withValues(alpha: 0.85)),
+                  ),
+                  if (pokemon.isFavorite) ...[
+                    const SizedBox(width: 12),
+                    Icon(Icons.favorite_rounded, size: 14, color: ink),
+                  ],
+                ],
+              ),
+              const SizedBox(height: _numberToName),
+              SizedBox(
+                width: 192,
+                // Con texto grande el nombre se encoge lo justo para caber
+                // entero en su línea: ni "Charman…" ni "Bulbasau / r".
+                child: _scaled(context)
+                    ? FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          name,
+                          maxLines: 1,
+                          style: _nameStyle(text)?.copyWith(color: ink),
+                        ),
+                      )
+                    : Text(
+                        name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: _nameStyle(text)?.copyWith(color: ink),
+                      ),
+              ),
+              const SizedBox(height: _nameToTypes),
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: [
+                  for (final type in pokemon.types)
+                    TypeChip(type, compact: true, style: TypeChipStyle.glass),
+                ],
+              ),
             ],
           ),
         ),

@@ -84,8 +84,8 @@ class FilterPill extends StatelessWidget {
           child: Center(
             widthFactor: 1,
             child: Container(
-              height: 40,
-              padding: const EdgeInsets.only(left: 18, right: 14),
+              constraints: const BoxConstraints(minHeight: 40),
+              padding: const EdgeInsets.fromLTRB(18, 4, 14, 4),
               decoration: BoxDecoration(
                 color: fill.withValues(alpha: enabled ? 1 : 0.35),
                 borderRadius: BorderRadius.circular(Radii.pill),
@@ -93,10 +93,13 @@ class FilterPill extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    label,
-                    maxLines: 1,
-                    style: context.text.labelLarge?.copyWith(color: on),
+                  Flexible(
+                    child: Text(
+                      label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.text.labelLarge?.copyWith(color: on),
+                    ),
                   ),
                   const SizedBox(width: 6),
                   Icon(Icons.keyboard_arrow_down_rounded, size: 18, color: on),

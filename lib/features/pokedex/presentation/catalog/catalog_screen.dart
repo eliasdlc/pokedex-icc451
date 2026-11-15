@@ -141,22 +141,30 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
                       onClear: _clearSearch,
                     ),
                     const SizedBox(height: Gaps.sibling),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        FilterPill(
-                          label: typeLabel,
-                          onTap: controlsOff
-                              ? null
-                              : () => showTypeSheet(context),
-                        ),
-                        FilterPill(
-                          label: sortLabel(l10n, view.query),
-                          onTap: controlsOff
-                              ? null
-                              : () => showSortSheet(context),
-                        ),
-                      ],
+                    // Wrap y no Row: con el texto al 200 % las dos píldoras
+                    // no caben en una línea y la segunda baja.
+                    SizedBox(
+                      // Ancho completo: sin él la Wrap se encoge a su contenido
+                      // y spaceBetween no separa las píldoras a los bordes.
+                      width: double.infinity,
+                      child: Wrap(
+                        alignment: WrapAlignment.spaceBetween,
+                        spacing: Gaps.row,
+                        children: [
+                          FilterPill(
+                            label: typeLabel,
+                            onTap: controlsOff
+                                ? null
+                                : () => showTypeSheet(context),
+                          ),
+                          FilterPill(
+                            label: sortLabel(l10n, view.query),
+                            onTap: controlsOff
+                                ? null
+                                : () => showSortSheet(context),
+                          ),
+                        ],
+                      ),
                     ),
                     if (count != null && !controlsOff)
                       Padding(
@@ -191,7 +199,13 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
                   return [
                     SliverFillRemaining(
                       hasScrollBody: false,
-                      child: _empty(context, view, sync, online),
+                      child: _empty(
+                        context,
+                        view,
+                        sync,
+                        online,
+                        indicator.status,
+                      ),
                     ),
                   ];
                 }
@@ -239,6 +253,7 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
     CatalogViewState view,
     SyncState sync,
     bool online,
+    IndicatorStatus status,
   ) {
     final l10n = context.l10n;
     if (sync.localCount == 0) {
@@ -247,6 +262,16 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
           icon: Icons.downloading,
           title: l10n.emptyFirstLoadTitle,
           body: l10n.emptyFirstLoadBody,
+        );
+      }
+      // Hay red pero PokéAPI no responde: pedir "Internet" aquí sería mentir.
+      if (status == IndicatorStatus.serviceUnavailable) {
+        return EmptyStateView(
+          icon: Icons.warning_amber_rounded,
+          title: l10n.navegacionApiDownTitle,
+          body: l10n.emptyApiDownBody,
+          primaryLabel: l10n.navegacionRetry,
+          onPrimary: _retrySync,
         );
       }
       return EmptyStateView(
@@ -288,7 +313,7 @@ class _CardList extends StatelessWidget {
         Gaps.navClearance,
       ),
       sliver: SliverFixedExtentList.builder(
-        itemExtent: PokemonListCard.extent,
+        itemExtent: PokemonListCard.extentOf(context),
         itemCount: itemCount,
         itemBuilder: (context, i) => Padding(
           padding: const EdgeInsets.only(bottom: PokemonListCard.gap),
