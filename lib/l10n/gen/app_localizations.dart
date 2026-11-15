@@ -1921,6 +1921,48 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'{name}, tipo {type}, no afecta al rival'**
   String gamesBattleMoveImmuneSemantics(String name, String type);
+
+  /// No description provided for @emptyApiDownBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Hay Internet, pero PokéAPI no contesta, así que todavía no pude descargar tu Pokédex. Lo vuelvo a intentar solo; si quieres, hazlo ahora.'**
+  String get emptyApiDownBody;
+
+  /// No description provided for @soonTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Llega en la entrega final'**
+  String get soonTitle;
+
+  /// No description provided for @regionsSoonBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Aquí vas a recorrer las regiones, de Kanto a Paldea. Mientras tanto, el catálogo completo está en la Pokédex.'**
+  String get regionsSoonBody;
+
+  /// No description provided for @playSoonBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Aquí van a vivir la trivia y los juegos, también sin conexión. Mientras tanto, explora la Pokédex.'**
+  String get playSoonBody;
+
+  /// No description provided for @profileSoonBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Aquí vas a ver tu ficha de entrenador y tus logros. Ajustes ya funciona: tema, idioma y el Laboratorio.'**
+  String get profileSoonBody;
+
+  /// No description provided for @openPokedex.
+  ///
+  /// In es, this message translates to:
+  /// **'Ir a la Pokédex'**
+  String get openPokedex;
+
+  /// No description provided for @openSettings.
+  ///
+  /// In es, this message translates to:
+  /// **'Abrir Ajustes'**
+  String get openSettings;
 }
 
 class _AppLocalizationsDelegate

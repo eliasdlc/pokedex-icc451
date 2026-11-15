@@ -780,5 +780,12 @@
         "type": "String"
       }
     }
-  }
+  },
+  "emptyApiDownBody": "Hay Internet, pero PokéAPI no contesta, así que todavía no pude descargar tu Pokédex. Lo vuelvo a intentar solo; si quieres, hazlo ahora.",
+  "soonTitle": "Llega en la entrega final",
+  "regionsSoonBody": "Aquí vas a recorrer las regiones, de Kanto a Paldea. Mientras tanto, el catálogo completo está en la Pokédex.",
+  "playSoonBody": "Aquí van a vivir la trivia y los juegos, también sin conexión. Mientras tanto, explora la Pokédex.",
+  "profileSoonBody": "Aquí vas a ver tu ficha de entrenador y tus logros. Ajustes ya funciona: tema, idioma y el Laboratorio.",
+  "openPokedex": "Ir a la Pokédex",
+  "openSettings": "Abrir Ajustes"
 }

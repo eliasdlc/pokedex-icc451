@@ -1097,4 +1097,29 @@ class AppLocalizationsEs extends AppLocalizations {
   String gamesBattleMoveImmuneSemantics(String name, String type) {
     return '$name, tipo $type, no afecta al rival';
   }
+
+  @override
+  String get emptyApiDownBody =>
+      'Hay Internet, pero PokéAPI no contesta, así que todavía no pude descargar tu Pokédex. Lo vuelvo a intentar solo; si quieres, hazlo ahora.';
+
+  @override
+  String get soonTitle => 'Llega en la entrega final';
+
+  @override
+  String get regionsSoonBody =>
+      'Aquí vas a recorrer las regiones, de Kanto a Paldea. Mientras tanto, el catálogo completo está en la Pokédex.';
+
+  @override
+  String get playSoonBody =>
+      'Aquí van a vivir la trivia y los juegos, también sin conexión. Mientras tanto, explora la Pokédex.';
+
+  @override
+  String get profileSoonBody =>
+      'Aquí vas a ver tu ficha de entrenador y tus logros. Ajustes ya funciona: tema, idioma y el Laboratorio.';
+
+  @override
+  String get openPokedex => 'Ir a la Pokédex';
+
+  @override
+  String get openSettings => 'Abrir Ajustes';
 }
