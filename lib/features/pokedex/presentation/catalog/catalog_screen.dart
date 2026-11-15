@@ -7,7 +7,7 @@ import '../../../../core/config/app_config.dart';
 import '../../../../core/connectivity/connectivity_state.dart';
 import '../../../../core/utils/debouncer.dart';
 import '../../../../shared/l10n_x.dart';
-import '../../../../shared/widgets/main_app_bar.dart';
+import '../../../../shared/widgets/pokedex_header.dart';
 import '../../../../shared/widgets/state_message.dart';
 import '../detail/detail_screen.dart';
 import '../widgets/empty_state_view.dart';
@@ -30,6 +30,7 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
   final _search = TextEditingController();
   final _scroll = ScrollController();
 
+  /// La búsqueda restaurada no pisa lo que la persona ya escribió.
   bool _typed = false;
 
   @override
@@ -69,6 +70,7 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    // La búsqueda guardada llega tras el primer cuadro: se copia al campo una vez.
     ref.listen(catalogControllerProvider.select((v) => v.query.search), (
       _,
       search,
@@ -101,13 +103,23 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
             l10n.navegacionTypesCount(1),
       final n => l10n.navegacionTypesCount(n),
     };
+
     return Scaffold(
-      appBar: MainAppBar(title: l10n.appTitle),
+      appBar: PokedexHeader(
+        title: l10n.appTitle,
+        detail: indicator.remoteTotal == null
+            ? null
+            : l10n.headerSaved(
+                indicator.localCount,
+                '${indicator.remoteTotal}',
+              ),
+      ),
       body: RefreshIndicator(
         color: t.ac,
         onRefresh: () => ref.read(syncServiceProvider).refresh(manual: true),
         child: CustomScrollView(
           controller: _scroll,
+          // Los sprites sobresalen de su tarjeta: nada los recorta.
           clipBehavior: Clip.none,
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
@@ -259,6 +271,7 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
   }
 }
 
+/// `itemExtent` fijo: Flutter no mide cada tarjeta.
 class _CardList extends StatelessWidget {
   const _CardList({required this.itemCount, required this.itemBuilder});
 

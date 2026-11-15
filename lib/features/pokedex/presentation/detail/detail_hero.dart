@@ -1,82 +1,19 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/theme/app_tokens.dart';
 import '../../../../app/theme/type_palette.dart';
 import '../../../../shared/l10n_x.dart';
-import '../../../../shared/widgets/connectivity_indicator.dart';
-import '../../../../shared/widgets/favorite_button.dart';
+import '../../../../shared/widgets/pokedex_header.dart';
 import '../../../../shared/widgets/type_chip.dart';
 import '../../domain/entities/art_sources.dart';
 import '../../domain/entities/pokemon_summary.dart';
 import 'art_mode_switch.dart';
+import 'detail_compact_header.dart';
 import 'detail_providers.dart';
 import 'pokemon_art.dart';
 
-class DetailBarButton extends StatelessWidget {
-  const DetailBarButton({
-    super.key,
-    required this.icon,
-    required this.label,
-    required this.onTap,
-    this.overlay = true,
-    this.color,
-  });
-
-  final IconData icon;
-  final String label;
-
-  final VoidCallback? onTap;
-  final bool overlay;
-
-  final Color? color;
-
-  @override
-  Widget build(BuildContext context) {
-    final enabled = onTap != null;
-    return Semantics(
-      button: true,
-      enabled: enabled,
-      label: label,
-      excludeSemantics: true,
-      child: Tooltip(
-        message: label,
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: onTap,
-          child: Opacity(
-            opacity: enabled ? 1 : 0.4,
-            child: SizedBox.square(
-              dimension: 48,
-              child: Center(
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  alignment: Alignment.center,
-                  decoration: overlay
-                      ? BoxDecoration(
-                          shape: BoxShape.circle,
-                          // Pintura cruda: no cambia con el tema.
-                          color: Colors.black.withValues(alpha: 0.32),
-                        )
-                      : null,
-                  child: Icon(
-                    icon,
-                    size: 24,
-                    color: overlay ? Colors.white : color ?? context.tokens.ink,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
+/// El sprite cae y rebota una vez (600 ms); con movimiento reducido se queda quieto.
 class DetailHero extends ConsumerStatefulWidget {
   const DetailHero({
     super.key,
@@ -104,10 +41,17 @@ class DetailHero extends ConsumerStatefulWidget {
   final bool isFavorite;
   final VoidCallback onFavorite;
   final VoidCallback onBack;
+
+  /// null apaga el altavoz: no hay grito.
   final VoidCallback? onCry;
+
   final Widget tabs;
+
+  /// La caída con rebote solo ocurre la primera vez.
   final bool playIntro;
+
   final String? formName;
+
   final List<Widget> badges;
 
   @override
@@ -145,6 +89,7 @@ class _DetailHeroState extends ConsumerState<DetailHero>
     super.dispose();
   }
 
+  /// Se llama después del primer cuadro para no mover controladores en medio de un `build`.
   void _applyMotion(bool reduced) {
     if (_reduced == reduced) return;
     final first = _reduced == null;
@@ -170,7 +115,6 @@ class _DetailHeroState extends ConsumerState<DetailHero>
     final s = widget.pokemon;
     final lang = context.languageCode;
     final hue = typeColor(s.types.first.slug);
-    final barTop = math.max(56.0, MediaQuery.paddingOf(context).top + 2);
     return Stack(
       children: [
         SizedBox(
@@ -227,11 +171,18 @@ class _DetailHeroState extends ConsumerState<DetailHero>
                   ),
                 ),
                 Positioned(
-                  top: barTop,
-                  left: 16,
-                  right: 16,
-                  height: 48,
-                  child: _topBar(context),
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: PokedexHeader.float(
+                    onBack: widget.onBack,
+                    actions: detailKeys(
+                      context.l10n,
+                      isFavorite: widget.isFavorite,
+                      onFavorite: widget.onFavorite,
+                      onCry: widget.onCry,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -299,6 +250,7 @@ class _DetailHeroState extends ConsumerState<DetailHero>
     );
   }
 
+  /// Un solo `AnimatedBuilder` con una traslación: no repinta la imagen.
   Widget _sprite() {
     final reduced = _reduced ?? false;
     final art = PokemonArt(
@@ -322,68 +274,6 @@ class _DetailHeroState extends ConsumerState<DetailHero>
           );
         },
       ),
-    );
-  }
-
-  Widget _topBar(BuildContext context) {
-    final l10n = context.l10n;
-    return Stack(
-      children: [
-        Align(
-          alignment: Alignment.centerLeft,
-          child: DetailBarButton(
-            icon: Icons.chevron_left_rounded,
-            label: MaterialLocalizations.of(context).backButtonTooltip,
-            onTap: widget.onBack,
-          ),
-        ),
-        const Align(alignment: Alignment.center, child: _HeroIndicator()),
-        Align(
-          alignment: Alignment.centerRight,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              DetailBarButton(
-                icon: Icons.volume_up_rounded,
-                label: widget.onCry == null
-                    ? l10n.detailCryUnavailable
-                    : l10n.detailCryReplay,
-                onTap: widget.onCry,
-              ),
-              const SizedBox(width: 8),
-              FavoriteButton(
-                isFavorite: widget.isFavorite,
-                onToggle: widget.onFavorite,
-                overlay: true,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _HeroIndicator extends StatelessWidget {
-  const _HeroIndicator();
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Positioned.fill(
-          top: 8,
-          bottom: 8,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: context.tokens.sf,
-              borderRadius: BorderRadius.circular(Radii.pill),
-            ),
-          ),
-        ),
-        const ConnectivityIndicator(),
-      ],
     );
   }
 }

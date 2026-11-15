@@ -8,6 +8,7 @@ import '../../../../l10n/gen/app_localizations.dart';
 import '../../../../shared/l10n_x.dart';
 import '../../domain/entities/catalog_query.dart';
 import '../widgets/control_fill.dart';
+import '../../../../shared/widgets/pokedex_key.dart';
 import 'catalog_controller.dart';
 import 'catalog_notices.dart';
 import 'sheet_frame.dart';
@@ -33,6 +34,7 @@ String sortLabel(AppLocalizations l10n, CatalogQuery query) {
   };
 }
 
+/// Trabaja sobre un borrador y aplica todo con el botón del pie.
 class _SortSheet extends ConsumerStatefulWidget {
   const _SortSheet();
 
@@ -47,11 +49,13 @@ class _SortSheetState extends ConsumerState<_SortSheet> {
     () => _draft = _draft.copyWith(sort: sort, ascending: ascending),
   );
 
+  /// Generación y región son la misma elección: tocar la elegida la quita.
   void _toggleGeneration(int id) => setState(
     () => _draft = _draft.copyWith(
       generationId: () => _draft.generationId == id ? null : id,
     ),
   );
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -64,6 +68,7 @@ class _SortSheetState extends ConsumerState<_SortSheet> {
 
     return SheetFrame(
       title: l10n.navegacionSortTitle,
+      // Limpiar no toca los tipos, que viven en la otra hoja.
       onClear: () => setState(
         () => _draft = CatalogQuery(
           search: _draft.search,
@@ -130,6 +135,7 @@ class _SortSheetState extends ConsumerState<_SortSheet> {
           ),
           const SizedBox(height: Gaps.sibling),
           _Eyebrow(l10n.navegacionStatsSection),
+          // Una estadística ordena de mayor a menor; tocarla otra vez invierte el sentido.
           Wrap(
             spacing: 8,
             children: [
@@ -205,14 +211,14 @@ class _SortSheetState extends ConsumerState<_SortSheet> {
           const SizedBox(height: 8),
           SizedBox(
             width: double.infinity,
-            child: FilledButton(
+            child: PokedexKey(
+              label: count == null
+                  ? l10n.apply
+                  : l10n.navegacionSeeResults(count),
               onPressed: () {
                 ref.read(catalogControllerProvider.notifier).apply(_draft);
                 Navigator.pop(context);
               },
-              child: Text(
-                count == null ? l10n.apply : l10n.navegacionSeeResults(count),
-              ),
             ),
           ),
         ],
@@ -311,6 +317,7 @@ class _OrderPill extends StatelessWidget {
   }
 }
 
+/// Nueve caben en los 361 de ancho.
 class _GenerationDot extends StatelessWidget {
   const _GenerationDot({
     required this.label,
@@ -373,7 +380,6 @@ class _SheetChip extends StatelessWidget {
   final String label;
   final bool selected;
 
-  /// Relleno y texto cuando está elegida.
   final Color fill;
   final Color ink;
   final VoidCallback onTap;
