@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/di/providers.dart';
 import '../../../app/theme/app_tokens.dart';
+import '../../../core/config/app_config.dart';
 import '../../../shared/l10n_x.dart';
 import '../domain/debug_console.dart';
 import '../../../shared/widgets/pokedex_header.dart';
@@ -50,9 +51,13 @@ class _LabScreenState extends ConsumerState<LabScreen> {
         return;
       }
       _log('[sql] ${l10n.labSqlDone(result.changed!)}');
-      // Tras alterar la base el vigilante corre ya, sin esperar sus 20 s.
-      final tampered = await ref.read(syncServiceProvider).checkIntegrity();
-      if (mounted) _log('[integridad] ${l10n.labIntegrityResult(tampered)}');
+      // PA-16: el dato alterado tiene que verse antes de restaurarse. No se
+      // verifica aquí: el vigilante vuelve a contar sus 20 s desde ahora, y
+      // abrir la ficha de ese Pokémon lo corrige antes.
+      ref.read(syncServiceProvider).restartIntegrityTimer();
+      _log(
+        '[integridad] ${l10n.labIntegrityScheduled(AppConfig.integrityInterval.inSeconds)}',
+      );
     } on Exception catch (e) {
       _log('[sql] $e');
     }

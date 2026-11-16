@@ -134,6 +134,7 @@
   "labSql": "SQL console",
   "labSqlHint": "UPDATE pokemon SET name_en = 'Edited Pikachu' WHERE id = 25",
   "labRun": "Run",
+  "labIntegrityScheduled": "Next check in {seconds} s. Opening the detail fixes it sooner.",
   "labSqlDone": "Done. Rows: {rows}",
   "labMeta": "Sync metadata",
   "onbTitle2": "Watch the indicator",

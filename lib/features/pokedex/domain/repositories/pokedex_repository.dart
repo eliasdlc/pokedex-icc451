@@ -37,4 +37,9 @@ abstract interface class SyncService {
   Future<void> ensureDetail(int pokemonId);
 
   Future<int> checkIntegrity();
+
+  /// Vuelve a contar el intervalo del vigilante desde cero. Tras una edición
+  /// manual de la base, el dato alterado se ve un intervalo completo antes de
+  /// que el vigilante lo restaure (PA-16).
+  void restartIntegrityTimer();
 }

@@ -486,6 +486,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get labRun => 'Run';
 
   @override
+  String labIntegrityScheduled(int seconds) {
+    return 'Next check in $seconds s. Opening the detail fixes it sooner.';
+  }
+
+  @override
   String labSqlDone(int rows) {
     return 'Done. Rows: $rows';
   }

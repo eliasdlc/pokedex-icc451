@@ -63,6 +63,36 @@ void main() {
     },
   );
 
+  test(
+    'PA-05 tras reiniciar sin conexión el catálogo parcial se sigue indicando',
+    () async {
+      await engine.refresh();
+      // Una sincronización que no terminó: faltan 50 de los 250.
+      await (db.delete(
+        db.pokemon,
+      )..where((p) => p.id.isBiggerThanValue(200))).go();
+      final offline = FakeConnectivity(
+        ServiceAvailability.offline,
+        remote: remote,
+      );
+      final restarted = SyncEngine(
+        remote: remote,
+        local: local,
+        connectivity: offline,
+        images: FakeImages(),
+        sleep: (_) async {},
+      );
+      await restarted.start();
+      expect(restarted.state.localCount, 200);
+      expect(restarted.state.remoteTotal, 250);
+      expect(restarted.state.isPartial, isTrue);
+      // Las 50 filas que faltan quedan pendientes de reparar, sin pedir nada.
+      expect(await restarted.checkIntegrity(), 50);
+      expect(remote.calls.where((c) => c.startsWith('byIds')), hasLength(3));
+      await restarted.dispose();
+    },
+  );
+
   test('delta: si la API agrega Pokémon, solo se piden los nuevos', () async {
     await engine.refresh();
     remote.total = 260;
@@ -90,6 +120,84 @@ void main() {
     expect(row!.nameEs, 'Poke 25');
     expect(row.hp, 50);
     expect(await local.countStale(), 0);
+  });
+
+  test(
+    'PA-16 fila borrada a mano: el vigilante la detecta y la recupera',
+    () async {
+      await engine.refresh();
+      await ToggleFavorite(repository)(42);
+      await db.customStatement('DELETE FROM pokemon WHERE id = 42');
+      // Sin la fila no hay huella que recalcular: la delata sync_meta.
+      expect(await engine.checkIntegrity(), greaterThanOrEqualTo(1));
+      expect((await local.pokemonById(42))!.nameEs, 'Poke 42');
+      expect(await local.countStale(), 0);
+      // OF-21: el favorito no se tocó y vuelve a verse con su fila.
+      final favorites = await repository.watchFavorites().first;
+      expect(favorites.single.id, 42);
+    },
+  );
+
+  test(
+    'PA-16 tipo alterado en pokemon_types: se restaura y los favoritos siguen',
+    () async {
+      await engine.refresh();
+      await ToggleFavorite(repository)(25);
+      await db.customStatement(
+        'UPDATE pokemon_types SET type_id = 10 WHERE pokemon_id = 25',
+      );
+      expect(await engine.checkIntegrity(), 1);
+      final types = await (db.select(
+        db.pokemonTypes,
+      )..where((t) => t.pokemonId.equals(25))).get();
+      expect(types.map((t) => t.typeId), [12]);
+      expect((await db.select(db.favorites).get()).single.pokemonId, 25);
+    },
+  );
+
+  test('OF-20 una fila borrada se recupera al abrir su ficha', () async {
+    await engine.refresh();
+    await db.customStatement('DELETE FROM pokemon WHERE id = 9');
+    await engine.ensureDetail(9);
+    expect((await local.pokemonById(9))!.nameEs, 'Poke 9');
+  });
+
+  test('un recurso en error sin fila no se toma por borrado', () async {
+    await engine.refresh();
+    await db.customStatement('DELETE FROM pokemon WHERE id = 11');
+    await local.recordFailure('pokemon:11', 'No llegó en la revalidación');
+    expect(await engine.checkIntegrity(), 0);
+  });
+
+  test('PA-16 tras una edición manual el dato alterado se ve un intervalo completo', () async {
+    const interval = Duration(milliseconds: 600);
+    final watched = SyncEngine(
+      remote: remote,
+      local: local,
+      connectivity: connectivity,
+      images: FakeImages(),
+      sleep: (_) async {},
+      integrityInterval: interval,
+    );
+    addTearDown(watched.dispose);
+    await watched.start();
+    await watched.refresh();
+    // A mitad del ciclo alguien edita la base y el reloj vuelve a cero.
+    await Future<void>.delayed(const Duration(milliseconds: 400));
+    await db.customStatement(
+      "UPDATE pokemon SET name_es = 'Pikachuu' WHERE id = 25",
+    );
+    watched.restartIntegrityTimer();
+    // Sin reiniciar, el ciclo original habría corregido a los 600 ms.
+    await Future<void>.delayed(const Duration(milliseconds: 350));
+    expect((await local.pokemonById(25))!.nameEs, 'Pikachuu');
+    // Pasado el intervalo, el vigilante lo corrige solo.
+    final deadline = DateTime.now().add(const Duration(seconds: 3));
+    while ((await local.pokemonById(25))!.nameEs != 'Poke 25' &&
+        DateTime.now().isBefore(deadline)) {
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+    }
+    expect((await local.pokemonById(25))!.nameEs, 'Poke 25');
   });
 
   test('modificación en caliente sin servicio: queda marcada y se corrige al volver', () async {
@@ -261,5 +369,19 @@ void main() {
     expect(remote.calls.where((c) => c == 'ids').length, 4);
     expect(await local.pokemonCount(), 250);
     expect(connectivity.current, ServiceAvailability.serviceUnavailable);
+  });
+
+  test('PA-16 tipos borrados en pokemon_types: el catálogo no falla y se restauran', () async {
+    await engine.refresh();
+    await db.customStatement('DELETE FROM pokemon_types WHERE pokemon_id = 25');
+    final list = await repository
+        .watchCatalog(const CatalogQuery(search: '#25'), limit: 50)
+        .first;
+    expect(list.single.types.single.slug, 'unknown');
+    expect(await engine.checkIntegrity(), 1);
+    final types = await (db.select(
+      db.pokemonTypes,
+    )..where((t) => t.pokemonId.equals(25))).get();
+    expect(types.map((t) => t.typeId), [12]);
   });
 }

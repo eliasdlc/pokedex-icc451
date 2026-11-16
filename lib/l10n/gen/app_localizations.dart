@@ -902,6 +902,12 @@ abstract class AppLocalizations {
   /// **'Ejecutar'**
   String get labRun;
 
+  /// No description provided for @labIntegrityScheduled.
+  ///
+  /// In es, this message translates to:
+  /// **'Próxima comprobación en {seconds} s. Abrir la ficha lo corrige antes.'**
+  String labIntegrityScheduled(int seconds);
+
   /// No description provided for @labSqlDone.
   ///
   /// In es, this message translates to:

@@ -306,6 +306,14 @@
   "labSql": "Consola SQL",
   "labSqlHint": "UPDATE pokemon SET name_es = 'Pikachu modificado' WHERE id = 25",
   "labRun": "Ejecutar",
+  "labIntegrityScheduled": "Próxima comprobación en {seconds} s. Abrir la ficha lo corrige antes.",
+  "@labIntegrityScheduled": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
   "labSqlDone": "Ejecutado. Filas: {rows}",
   "@labSqlDone": {
     "placeholders": {

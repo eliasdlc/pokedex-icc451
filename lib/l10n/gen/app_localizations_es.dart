@@ -488,6 +488,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get labRun => 'Ejecutar';
 
   @override
+  String labIntegrityScheduled(int seconds) {
+    return 'Próxima comprobación en $seconds s. Abrir la ficha lo corrige antes.';
+  }
+
+  @override
   String labSqlDone(int rows) {
     return 'Ejecutado. Filas: $rows';
   }
