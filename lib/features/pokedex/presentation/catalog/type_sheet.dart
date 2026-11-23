@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../app/theme/app_tokens.dart';
 import '../../../../app/theme/type_palette.dart';
 import '../../../../shared/l10n_x.dart';
+import '../../../../shared/widgets/pokedex_key.dart';
 import '../widgets/control_fill.dart';
 import 'catalog_controller.dart';
 import 'sheet_frame.dart';
@@ -11,6 +12,7 @@ import 'sheet_frame.dart';
 Future<void> showTypeSheet(BuildContext context) =>
     showCatalogSheet(context, (_) => const _TypeSheet());
 
+/// Nada se aplica hasta pulsar "Aplicar filtro".
 class _TypeSheet extends ConsumerStatefulWidget {
   const _TypeSheet();
 
@@ -56,7 +58,8 @@ class _TypeSheetState extends ConsumerState<_TypeSheet> {
       ),
       footer: SizedBox(
         width: double.infinity,
-        child: FilledButton(
+        child: PokedexKey(
+          label: l10n.navegacionApplyFilter,
           onPressed: () {
             final controller = ref.read(catalogControllerProvider.notifier);
             controller.apply(
@@ -64,13 +67,13 @@ class _TypeSheetState extends ConsumerState<_TypeSheet> {
             );
             Navigator.pop(context);
           },
-          child: Text(l10n.navegacionApplyFilter),
         ),
       ),
     );
   }
 }
 
+/// Área táctil de 52: 42 más 10 de separación.
 class _TypeOption extends StatelessWidget {
   const _TypeOption({
     required this.label,
@@ -113,7 +116,7 @@ class _TypeOption extends StatelessWidget {
                     label,
                     style: context.text.labelLarge?.copyWith(color: ink),
                   ),
-                  // La elección no depende solo del color: lleva una marca.
+                  // La elección lleva una marca, no solo color.
                   if (selected)
                     Positioned(
                       left: 16,

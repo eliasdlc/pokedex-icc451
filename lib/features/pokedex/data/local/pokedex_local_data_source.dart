@@ -448,13 +448,16 @@ class PokedexLocalDataSource {
   /// Devuelve los recursos alterados a mano. Calcula en otro isolate para no
   /// trabar la interfaz; con [onlyId] revisa un solo Pokémon.
   Future<List<String>> findTamperedResources({int? onlyId}) async {
-    final pokemon =
+    // Las tres lecturas en una transacción: una foto consistente. Sin ella, un
+    // lote de la sincronización escrito entre la lectura de filas y la de
+    // sync_meta parecería un lote de filas borradas.
+    final (pokemon, types, metas) = await db.transaction(
+      () async => (
         await (db.select(db.pokemon)..where(
               (p) =>
                   onlyId == null ? const Constant(true) : p.id.equals(onlyId),
             ))
-            .get();
-    final types =
+            .get(),
         await (db.select(db.pokemonTypes)
               ..where(
                 (t) => onlyId == null
@@ -462,14 +465,23 @@ class PokedexLocalDataSource {
                     : t.pokemonId.equals(onlyId),
               )
               ..orderBy([(t) => OrderingTerm.asc(t.slot)]))
-            .get();
-    final metas = await db.select(db.syncMeta).get();
+            .get(),
+        await db.select(db.syncMeta).get(),
+      ),
+    );
 
     final typesById = <int, List<int>>{};
     for (final t in types) {
       typesById.putIfAbsent(t.pokemonId, () => []).add(t.typeId);
     }
     final storedHash = {for (final m in metas) m.resource: m.contentHash};
+    // Recursos que la última sincronización dejó bien guardados. Si su fila ya
+    // no existe, alguien la borró a mano. Los que están en "error" se excluyen:
+    // la API dejó de devolverlos y la revalidación ya los reintenta.
+    final synced = [
+      for (final m in metas)
+        if (m.status == 'ok' && m.contentHash != null) m.resource,
+    ];
 
     // Solo datos primitivos cruzan al otro isolate.
     final payload = [
@@ -501,7 +513,7 @@ class PokedexLocalDataSource {
         ],
     ];
     final encoded = jsonEncode(payload);
-    return Isolate.run(() => _compareHashes(encoded, storedHash));
+    return _compareInIsolate(encoded, storedHash, synced, onlyId);
   }
 
   /// Búsqueda, filtros y orden corren en SQLite: igual con o sin red.
@@ -680,12 +692,50 @@ class PokedexLocalDataSource {
       .insertOnConflictUpdate(
         AppSettingsCompanion.insert(key: key, value: value),
       );
+
+  /// El total remoto de la última sincronización. Se guarda para que, tras un
+  /// reinicio sin conexión, el catálogo parcial se siga indicando (PA-05).
+  Future<int?> lastRemoteTotal() async =>
+      int.tryParse(await readSetting(_remoteTotalKey) ?? '');
+
+  Future<void> saveRemoteTotal(int total) =>
+      writeSetting(_remoteTotalKey, '$total');
+
+  static const _remoteTotalKey = 'catalog_remote_total';
 }
 
+/// Función de nivel superior a propósito: un closure creado dentro de un
+/// método captura `this` (y con él la base), que no puede cruzar de isolate.
+Future<List<String>> _compareInIsolate(
+  String encoded,
+  Map<String, String?> stored,
+  List<String> synced,
+  int? onlyId,
+) => Isolate.run(() => _compareHashes(encoded, stored, synced, onlyId: onlyId));
+
+/// `pokemon:<id>` o `detail:<id>`, los recursos que tienen fila propia.
+final _recordResource = RegExp(r'^(?:pokemon|detail):(\d+)$');
+
 /// Corre dentro del isolate: no puede tocar la base, solo calcula.
-List<String> _compareHashes(String encodedRows, Map<String, String?> stored) {
+List<String> _compareHashes(
+  String encodedRows,
+  Map<String, String?> stored,
+  List<String> synced, {
+  int? onlyId,
+}) {
   final rows = (jsonDecode(encodedRows) as List<Object?>).cast<List<Object?>>();
   final tampered = <String>[];
+
+  // Fila borrada: no hay nada que recalcular, la delata sync_meta.
+  final present = {for (final r in rows) r[0]! as int};
+  for (final resource in synced) {
+    final match = _recordResource.firstMatch(resource);
+    if (match == null) continue;
+    final id = int.parse(match.group(1)!);
+    if (onlyId != null && id != onlyId) continue;
+    if (!present.contains(id)) tampered.add(resource);
+  }
+
   for (final r in rows) {
     final id = r[0]! as int;
     final summary = summaryHash(

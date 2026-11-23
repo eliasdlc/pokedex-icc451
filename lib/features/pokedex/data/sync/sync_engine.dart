@@ -22,17 +22,20 @@ class SyncEngine implements SyncService {
     required ConnectivityService connectivity,
     required ImageStore images,
     Future<void> Function(Duration)? sleep,
+    Duration integrityInterval = AppConfig.integrityInterval,
   }) : _remote = remote,
        _local = local,
        _connectivity = connectivity,
        _images = images,
-       _sleep = sleep;
+       _sleep = sleep,
+       _integrityInterval = integrityInterval;
 
   final PokeApiRemoteDataSource _remote;
   final PokedexLocalDataSource _local;
   final ConnectivityService _connectivity;
   final ImageStore _images;
   final Future<void> Function(Duration)? _sleep;
+  final Duration _integrityInterval;
 
   final _controller = StreamController<SyncState>.broadcast();
   SyncState _state = const SyncState();
@@ -79,6 +82,7 @@ class SyncEngine implements SyncService {
       _state.copyWith(
         lastSyncedAt: lastSync,
         localCount: await _local.pokemonCount(),
+        remoteTotal: await _local.lastRemoteTotal(),
       ),
     );
     _countSub = _local.watchPokemonCount().listen(
@@ -93,11 +97,25 @@ class SyncEngine implements SyncService {
     });
 
     // El vigilante de la modificación en caliente.
+    _startIntegrityTimer();
+    unawaited(checkIntegrity());
+  }
+
+  void _startIntegrityTimer() {
+    _integrityTimer?.cancel();
     _integrityTimer = Timer.periodic(
-      AppConfig.integrityInterval,
+      _integrityInterval,
       (_) => unawaited(checkIntegrity()),
     );
-    unawaited(checkIntegrity());
+  }
+
+  @override
+  void restartIntegrityTimer() {
+    if (!_started || _disposed) return;
+    debugPrint(
+      'integridad: próxima comprobación en ${_integrityInterval.inSeconds} s',
+    );
+    _startIntegrityTimer();
   }
 
   @override
@@ -146,6 +164,7 @@ class SyncEngine implements SyncService {
   Future<void> _syncCatalogDelta() async {
     final remoteIds = await _call(_remote.fetchCatalogIds);
     _emit(_state.copyWith(remoteTotal: remoteIds.length));
+    await _local.saveRemoteTotal(remoteIds.length);
     final localIds = await _local.localIds();
     final missing = remoteIds.where((id) => !localIds.contains(id)).toList();
     for (final batch in missing.slices(AppConfig.catalogBatchSize)) {

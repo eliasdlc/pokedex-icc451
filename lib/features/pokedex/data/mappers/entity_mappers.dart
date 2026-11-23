@@ -35,7 +35,11 @@ PokemonSummary summaryFromRow(CatalogRow row, Map<int, PokeType> types) {
     nameEn: p.nameEn,
     nameJa: p.nameJa,
     generationId: p.generationId,
-    types: [for (final id in row.typeIds) types[id] ?? unknownType(id)],
+    // Una fila sin tipos (borrados con la consola SQL) no debe tumbar las
+    // pantallas, que pintan con el primer tipo; el vigilante la restaura.
+    types: row.typeIds.isEmpty
+        ? [unknownType(0)]
+        : [for (final id in row.typeIds) types[id] ?? unknownType(id)],
     stats: statsFromRow(p),
     spriteUrl: p.spriteUrl,
     artworkUrl: p.artworkUrl,

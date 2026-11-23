@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../app/theme/app_tokens.dart';
+import 'pokedex_key.dart';
 
 class StateMessage extends StatelessWidget {
   const StateMessage({
@@ -63,7 +64,7 @@ class StateMessage extends StatelessWidget {
             ],
             if (action != null) ...[
               const SizedBox(height: Gaps.section),
-              FilledButton(onPressed: action, child: Text(actionLabel!)),
+              PokedexKey(label: actionLabel!, onPressed: action),
             ],
           ],
         ),
@@ -72,6 +73,7 @@ class StateMessage extends StatelessWidget {
   }
 }
 
+/// Usa `sf2` porque `sf` y `bg` son iguales en claro y el esqueleto no se vería.
 class SkeletonBox extends StatelessWidget {
   const SkeletonBox({
     super.key,

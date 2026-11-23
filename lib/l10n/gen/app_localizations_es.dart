@@ -31,7 +31,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get statusOffline => 'Sin conexión';
 
   @override
-  String get statusUnavailable => 'API caída';
+  String get statusUnavailable => 'Servicio no disponible';
 
   @override
   String get statusSyncing => 'Sincronizando';
@@ -486,6 +486,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get labRun => 'Ejecutar';
+
+  @override
+  String labIntegrityScheduled(int seconds) {
+    return 'Próxima comprobación en $seconds s. Abrir la ficha lo corrige antes.';
+  }
 
   @override
   String labSqlDone(int rows) {
@@ -1068,4 +1073,58 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get perfilLastSync => 'Última sincronización';
+
+  @override
+  String headerSaved(int saved, String total) {
+    return '$saved de $total';
+  }
+
+  @override
+  String favoritesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count guardados',
+      one: '1 guardado',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get gamesBattleImmune => 'No afecta';
+
+  @override
+  String gamesBattlePp(int left, int max) {
+    return 'PP $left/$max';
+  }
+
+  @override
+  String gamesBattleMoveImmuneSemantics(String name, String type) {
+    return '$name, tipo $type, no afecta al rival';
+  }
+
+  @override
+  String get emptyApiDownBody =>
+      'Hay Internet, pero PokéAPI no contesta, así que todavía no pude descargar tu Pokédex. Lo vuelvo a intentar solo; si quieres, hazlo ahora.';
+
+  @override
+  String get soonTitle => 'Llega en la entrega final';
+
+  @override
+  String get regionsSoonBody =>
+      'Aquí vas a recorrer las regiones, de Kanto a Paldea. Mientras tanto, el catálogo completo está en la Pokédex.';
+
+  @override
+  String get playSoonBody =>
+      'Aquí van a vivir la trivia y los juegos, también sin conexión. Mientras tanto, explora la Pokédex.';
+
+  @override
+  String get profileSoonBody =>
+      'Aquí vas a ver tu ficha de entrenador y tus logros. Ajustes ya funciona: tema, idioma y el Laboratorio.';
+
+  @override
+  String get openPokedex => 'Ir a la Pokédex';
+
+  @override
+  String get openSettings => 'Abrir Ajustes';
 }

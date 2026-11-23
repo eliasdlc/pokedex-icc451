@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../shared/l10n_x.dart';
 import '../shared/widgets/pixel_icon.dart';
+import '../shared/widgets/pokedex_header.dart';
+import '../shared/widgets/pokedex_key.dart';
 import 'di/providers.dart';
 import 'theme/app_tokens.dart';
 
@@ -55,55 +57,55 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       ),
     ];
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Gaps.screen),
-          child: Column(
-            children: [
-              // "Saltar" ocupa su sitio en la última página, invisible, para
-              // que nada se mueva al llegar a ella.
-              Align(
-                alignment: Alignment.centerRight,
-                child: Visibility(
-                  visible: !_last,
-                  maintainSize: true,
-                  maintainAnimation: true,
-                  maintainState: true,
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      foregroundColor: context.tokens.ink,
-                    ),
-                    onPressed: _finish,
-                    child: Text(
-                      l10n.navegacionSkip,
-                      style: context.text.labelLarge,
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: PageView(
-                  controller: _pages,
-                  onPageChanged: (i) => setState(() => _page = i),
-                  children: [
-                    for (final (art, title, body) in slides)
-                      _OnboardingPage(art: art, title: title, body: body),
-                  ],
-                ),
-              ),
-              _PageDots(current: _page, count: _pageCount),
-              const SizedBox(height: Gaps.section),
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: _last ? _finish : _next,
-                  child: Text(_last ? l10n.getStarted : l10n.baseContinue),
-                ),
-              ),
-              const SizedBox(height: Gaps.section),
-            ],
+      body: Column(
+        children: [
+          // "Saltar" conserva su sitio, invisible, en la última página.
+          Visibility(
+            visible: !_last,
+            maintainSize: true,
+            maintainAnimation: true,
+            maintainState: true,
+            child: PokedexHeader.float(
+              showLens: false,
+              actions: [
+                HeaderTextKey(label: l10n.navegacionSkip, onPressed: _finish),
+              ],
+            ),
           ),
-        ),
+          Expanded(
+            child: PageView(
+              controller: _pages,
+              onPageChanged: (i) => setState(() => _page = i),
+              children: [
+                for (final (art, title, body) in slides)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Gaps.screen,
+                    ),
+                    child: _OnboardingPage(art: art, title: title, body: body),
+                  ),
+              ],
+            ),
+          ),
+          _PageDots(current: _page, count: _pageCount),
+          const SizedBox(height: Gaps.section),
+          SafeArea(
+            top: false,
+            minimum: const EdgeInsets.fromLTRB(
+              Gaps.screen,
+              0,
+              Gaps.screen,
+              Gaps.section,
+            ),
+            child: SizedBox(
+              width: double.infinity,
+              child: PokedexKey(
+                label: _last ? l10n.getStarted : l10n.baseContinue,
+                onPressed: _last ? _finish : _next,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

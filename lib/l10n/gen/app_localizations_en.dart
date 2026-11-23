@@ -31,7 +31,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statusOffline => 'Offline';
 
   @override
-  String get statusUnavailable => 'API down';
+  String get statusUnavailable => 'Service unavailable';
 
   @override
   String get statusSyncing => 'Syncing';
@@ -484,6 +484,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get labRun => 'Run';
+
+  @override
+  String labIntegrityScheduled(int seconds) {
+    return 'Next check in $seconds s. Opening the detail fixes it sooner.';
+  }
 
   @override
   String labSqlDone(int rows) {
@@ -1063,4 +1068,58 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get perfilLastSync => 'Last sync';
+
+  @override
+  String headerSaved(int saved, String total) {
+    return '$saved of $total';
+  }
+
+  @override
+  String favoritesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count saved',
+      one: '1 saved',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get gamesBattleImmune => 'No effect';
+
+  @override
+  String gamesBattlePp(int left, int max) {
+    return 'PP $left/$max';
+  }
+
+  @override
+  String gamesBattleMoveImmuneSemantics(String name, String type) {
+    return '$name, $type type, no effect on the rival';
+  }
+
+  @override
+  String get emptyApiDownBody =>
+      'You\'re online, but PokéAPI isn\'t answering, so I couldn\'t download your Pokédex yet. I\'ll keep trying on my own; you can also try now.';
+
+  @override
+  String get soonTitle => 'Coming in the final release';
+
+  @override
+  String get regionsSoonBody =>
+      'Here you\'ll explore the regions, from Kanto to Paldea. Meanwhile, the full catalog is in the Pokédex.';
+
+  @override
+  String get playSoonBody =>
+      'Trivia and games will live here, offline too. Meanwhile, explore the Pokédex.';
+
+  @override
+  String get profileSoonBody =>
+      'Your trainer card and achievements will live here. Settings already works: theme, language and the Lab.';
+
+  @override
+  String get openPokedex => 'Go to the Pokédex';
+
+  @override
+  String get openSettings => 'Open Settings';
 }
