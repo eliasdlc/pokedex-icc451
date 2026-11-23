@@ -56,7 +56,7 @@ Pruebas y calidad:
 
 ```bash
 flutter analyze                                    # No issues found!
-flutter test                                       # 61 pruebas: dominio, datos, ficha y demo del avance
+flutter test                                       # 70 pruebas: dominio, datos, ficha y demo del avance
 flutter test --tags live --run-skipped test/live   # 7 pruebas contra PokéAPI real
 ```
 
@@ -120,10 +120,35 @@ Unidireccional (PokéAPI a la base local), en segundo plano, en
 * Restauración de datos alterados (OF-19 a OF-21): la huella de cada fila se
   recalcula en otro isolate (`Isolate.run`) y se compara con la guardada al
   iniciar la app, al recuperar la conectividad, al abrir la ficha (solo ese
-  Pokémon), cada 20 s, al volver a primer plano y desde el Laboratorio. Lo
+  Pokémon), cada 20 s, al volver a primer plano y con "Verificar integridad
+  ahora" del Laboratorio. Una fila borrada se detecta porque `sync_meta` la da
+  por sincronizada y ya no está. Una edición desde la consola SQL del
+  Laboratorio vuelve a contar los 20 s desde cero, para que el dato alterado se
+  vea antes de restaurarse (PA-16). Lo
   alterado se marca `stale`; con servicio se corrige desde la API, que siempre
   prevalece; sin servicio la ficha muestra un aviso y se corrige al reconectar.
   Solo toca datos del catálogo: los favoritos no tienen equivalente remoto y no
   se sobrescriben.
 * Registro de última sincronización: `sync_meta` con `resource = 'catalog'`;
-  el indicador lo muestra como "hace N min".
+  el indicador lo muestra como "hace N min". El total remoto de la última
+  sincronización se guarda en `app_settings` (`catalog_remote_total`), así que
+  tras un reinicio sin conexión el catálogo parcial se sigue indicando.
+
+## 14. Código de terceros y uso de IA
+
+Declaración que pide el §17.6 del enunciado.
+
+* Inteligencia artificial: partes del código, de las pruebas y de esta
+  documentación (README y ADR) se generaron con Claude Code (Anthropic) a
+  partir de mis instrucciones. Revisé cada cambio, lo ejecuté con
+  `flutter analyze`, `flutter test` y en el emulador, y respondo por todo el
+  código del repositorio.
+* Datos e imágenes: PokéAPI (GraphQL v1beta2) y su repositorio de sprites en
+  GitHub. Se descargan en tiempo de ejecución; no están en el repositorio.
+* Paquetes: las dependencias de `pubspec.yaml` (Riverpod, Drift, graphql,
+  connectivity_plus, http, share_plus, audioplayers y las demás), cada una bajo
+  su licencia.
+* Fuentes: Poppins, Tiny5, Roboto Mono y Noto Sans JP, bajo la SIL Open Font
+  License (`assets/fonts/OFL-*.txt`).
+* Íconos de la barra y fondo de batalla (`assets/icons`, `assets/battle`):
+  ORIGEN POR CONFIRMAR.

@@ -24,11 +24,15 @@ PokéAPI, que prevalece siempre.
 3. Vigencia: TTL de 7 días. Lo vencido, lo marcado `stale` y lo que quedó en
    `error` se revalida por lotes.
 4. Vigilante de integridad (OF-20): al iniciar la app, al recuperar la
-   conectividad, cada 20 s, al volver a primer plano y desde el Laboratorio se
-   recalcula la huella de cada fila local en otro isolate; al abrir una ficha,
-   solo la de ese Pokémon. Si no coincide con la guardada, alguien la editó: se
-   marca `stale` y, con servicio, se corrige. Solo toca datos del catálogo
-   (OF-21).
+   conectividad, cada 20 s, al volver a primer plano y con "Verificar integridad
+   ahora" del Laboratorio se recalcula la huella de cada fila local en otro
+   isolate; al abrir una ficha, solo la de ese Pokémon. Si no coincide con la
+   guardada, alguien la editó; si `sync_meta` la da por sincronizada y la fila
+   no está, alguien la borró. En ambos casos se marca `stale` y, con servicio,
+   se corrige. Solo toca datos del catálogo (OF-21).
+5. Una edición desde la consola SQL del Laboratorio no se verifica en el acto:
+   vuelve a contar los 20 s desde cero. Así el dato alterado se ve en catálogo y
+   ficha antes de que el vigilante lo restaure, que es lo que pide PA-16.
 
 ## Alternativas consideradas
 
@@ -51,7 +55,11 @@ PokéAPI, que prevalece siempre.
 * La revalidación lleva un conjunto de ids ya intentados para no ciclar si la
   API deja de devolver uno.
 * El recálculo de 1025 sha1 corre en `Isolate.run` para no trabar el hilo de la
-  interfaz.
+  interfaz. Las filas, los tipos y `sync_meta` se leen en una sola transacción:
+  sin esa foto consistente, un lote escrito entre dos lecturas parecería un
+  lote de filas borradas.
+* Un recurso en `error` sin fila no se toma por borrado: la API dejó de
+  devolverlo y ya lo reintenta la revalidación.
 
 ## Consecuencias
 
@@ -62,4 +70,8 @@ PokéAPI, que prevalece siempre.
   `stat_total`, rutas de imagen, habilidades, movimientos o evoluciones no se
   detecta. Un cambio remoto en esas columnas tampoco reescribe la fila hasta
   que cambie algo que sí esté en la huella.
+* Negativas: un recurso sin huella en `sync_meta` (fila de `sync_meta` borrada
+  o huella en NULL) queda fuera del vigilante. Una fila que la API no tiene
+  (insertada a mano o con el id cambiado) no se borra: el vigilante restaura lo
+  que falta o está alterado, no poda lo que sobra.
 * Costo fijo: una consulta de ids por sincronización.
