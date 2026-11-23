@@ -94,7 +94,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
           return ListView.builder(
             // Los sprites sobresalen de su tarjeta: nada los recorta.
             clipBehavior: Clip.none,
-            itemExtent: PokemonListCard.extent,
+            itemExtent: PokemonListCard.extentOf(context),
             padding: const EdgeInsets.fromLTRB(
               Gaps.screen,
               Gaps.screen,
